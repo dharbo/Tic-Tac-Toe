@@ -1,2 +1,2 @@
 # Tic-Tac-Toe
-A program that runs Tic-Tac-Toe with two players.
+A program that runs Tic-Tac-Toe with two players. (Written in C++)
