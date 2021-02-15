@@ -1,0 +1,104 @@
+#include <iostream>
+using namespace std;
+
+const int RowSize = 3; //size of rows and cols are both constants of 3.
+const int ColSize = 3; 
+
+void displayBoard(char grid[RowSize][ColSize]); //prototypes of the functions used in this program.
+void playerChoiceCheck(char grid[RowSize][ColSize], int &Row, int &Col);
+void makeMove(char grid[RowSize][ColSize], int Row, int Col, int player);
+bool winCheck(char grid[RowSize][ColSize]);
+void catsGame(char grid[RowSize][ColSize]);
+
+int main()
+{
+    char grid[RowSize][ColSize];          //creation of a 2D, 3x3 array.
+    int Row, Col, p1 = 1, p2 = 2; 
+    bool Xwin = false, Owin = false;
+    for(int i = 0; i < RowSize; i++){     //loops fill the 2D array with ' '.
+        for(int j = 0; j < ColSize; j++)
+            grid[i][j] = ' ';
+    }
+    cout << "Welcome to Tic-Tac-Toe" << endl;
+    cout << "======================" << endl;
+    int move = 0;    //move with act as a counter letting the program know how many turns have gone by.
+    while(move < 9){ //loop will keep the game going until move = 9 (which means it's a cat's game if no players won).
+    cout << "Player " << p1 << " turn 'X'" << endl; //player 1's turn.  
+    displayBoard(grid);
+    playerChoiceCheck(grid, Row, Col);                 //functions are called and performed for player 1.
+    makeMove(grid, Row, Col, p1);
+    Xwin = winCheck(grid);
+    if(Xwin == true){
+        cout << "X Player Wins!" << endl;
+        displayBoard(grid);
+        break;
+    }
+    move++;
+    if(move >= 9){  //once this condition is met, it means it's a cat's game and will call the catsGame function
+    catsGame(grid); //and break from this while loop.
+    break;
+    }
+    cout << "Player " << p2 << " turn 'O'" << endl; //player 2's turn.
+    displayBoard(grid);
+    playerChoiceCheck(grid, Row, Col);                  //functions are called and performed for player 2.
+    makeMove(grid, Row, Col, p2);
+    Owin = winCheck(grid);
+    if(Owin == true){
+        cout << "O Player Wins!" << endl;
+        displayBoard(grid);
+        break;
+    }
+    move++;
+    }
+    return 0;
+}
+void displayBoard(char grid[RowSize][ColSize]) //displays the board
+{
+    cout << grid[0][0] << "|" << grid[0][1] << "|" << grid[0][2] << endl; 
+    cout << "-----" << endl;
+    cout << grid[1][0] << "|" << grid[1][1] << "|" << grid[1][2] << endl; 
+    cout << "-----" << endl;
+    cout << grid[2][0] << "|" << grid[2][1] << "|" << grid[2][2] << endl; 
+}
+void playerChoiceCheck(char grid[RowSize][ColSize], int &Row, int &Col) //asks for row & column, and checks for
+{                                                                       //for illegal moves.
+    cout << "Which Row would you like?" << endl;
+    cin >> Row;
+    cout << "Which Col would you like?" << endl;
+    cin >> Col;
+    while(grid[Row][Col] != ' '){
+        cout << "Illegal Move" << endl;
+        playerChoiceCheck(grid, Row, Col);
+    }
+}
+void makeMove(char grid[RowSize][ColSize], int Row, int Col, int player) //replaces ' ' with appropriate letter.
+{
+    if(player == 1)
+        grid[Row][Col] = 'X';
+    else if(player == 2)
+        grid[Row][Col] = 'O';
+}
+bool winCheck(char grid[RowSize][ColSize]) //returns true when player 1 or player 2 fills a row, diagonal,
+{                                          //or column. 
+    int i = 0;
+    bool result = false;
+    while(i < 3){                          //loop is used instead of hard code.
+        if(grid[i][0] != ' ' && grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2]){ //checks rows.
+            result = true;
+            break;
+        }
+        else if(grid[0][i] != ' ' && grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i]){ //checks columns.
+            result = true;
+            break;
+        }
+        i++; //i++ will allow the code above to check the next rows and columns before exiting the loop.
+    }
+    if(grid[1][1] != ' ' && grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) result = true; //checks both diagonals
+    if(grid[1][1] != ' ' && grid[2][0] == grid[1][1] && grid[1][1] == grid[0][2]) result = true;
+    return result; //the return value will either be true or false.
+}
+void catsGame(char grid[RowSize][ColSize]) //once the 9 moves have been made and there's no winner, this function
+{                                          //displays cat's game and the filled board.
+    cout << "Cat's Game!" << endl;
+    displayBoard(grid);
+}
